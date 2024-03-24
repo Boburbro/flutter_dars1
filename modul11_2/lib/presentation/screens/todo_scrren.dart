@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../logic/active_todos/active_todos_cubit.dart';
-import '../../logic/completed_todos/completed_todos_cubit.dart';
-import '../../data/constants/tab_titles.dart';
+import '../../logic/blocs/active_todos/active_todos_bloc.dart';
+import '../../logic/blocs/completed_todos/completed_todos_bloc.dart';
+import '../../logic/blocs/todo/todo_bloc.dart';
 
-import '../../logic/todo/todo_cubit.dart';
+import '../../data/constants/tab_titles.dart';
 import '../widgets/manageTodo.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/todo_list_item.dart';
@@ -22,9 +22,9 @@ class _ToDoScreenState extends State<ToDoScreen> {
   @override
   void didChangeDependencies() {
     if (!isinitialized) {
-      context.read<TodoCubit>().getTodos();
-      context.read<ActiveTodosCubit>().getActive();
-      context.read<CompletedTodosCubit>().getCompletedTodos();
+      context.read<TodoBloc>().add(TodoLoadedEvent());
+      context.read<ActiveTodosBloc>().add(LoadActiveTodosEvent());
+      context.read<CompletedTodosBloc>().add(CompletedTodosLoadedEvent());
       isinitialized = true;
     }
     super.didChangeDependencies();
@@ -58,60 +58,66 @@ class _ToDoScreenState extends State<ToDoScreen> {
           bottom:
               TabBar(tabs: TabTitle.titles.map((e) => Tab(text: e)).toList()),
         ),
-        body: TabBarView(
-          children: [
-            BlocBuilder<TodoCubit, TodoState>(
-              builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: state.todos.length,
-                    itemBuilder: (ctx, index) => ToDoListItem(
-                      todo: state.todos[index],
+        body: BlocListener<TodoBloc, TodoState>(
+          listener: (context, state) {
+            context.read<ActiveTodosBloc>().add(LoadActiveTodosEvent());
+            context.read<CompletedTodosBloc>().add(CompletedTodosLoadedEvent());
+          },
+          child: TabBarView(
+            children: [
+              BlocBuilder<TodoBloc, TodoState>(
+                builder: (context, state) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      itemCount: state.todos.length,
+                      itemBuilder: (ctx, index) => ToDoListItem(
+                        todo: state.todos[index],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-            BlocBuilder<ActiveTodosCubit, ActiveTodosState>(
-              builder: (context, state) {
-                if (state is ActiveTodosLoaded) {
-                  return state.todos.isEmpty
-                      ? const Center(
-                          child: Text("No task"),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                            itemCount: state.todos.length,
-                            itemBuilder: (ctx, index) => ToDoListItem(
-                              todo: state.todos[index],
+                  );
+                },
+              ),
+              BlocBuilder<ActiveTodosBloc, ActiveTodosState>(
+                builder: (context, state) {
+                  if (state is ActiveTodosLoaded) {
+                    return state.todos.isEmpty
+                        ? const Center(
+                            child: Text("No task"),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListView.builder(
+                              itemCount: state.todos.length,
+                              itemBuilder: (ctx, index) => ToDoListItem(
+                                todo: state.todos[index],
+                              ),
                             ),
-                          ),
-                        );
-                }
-                return const Center(child: Text("No todos"));
-              },
-            ),
-            BlocBuilder<CompletedTodosCubit, CompletedTodosState>(
-              builder: (context, state) {
-                if (state is CompletedTodosLoaded) {
-                  return state.todos.isEmpty
-                      ? const Center(child: Text("No task"))
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                            itemCount: state.todos.length,
-                            itemBuilder: (ctx, index) => ToDoListItem(
-                              todo: state.todos[index],
+                          );
+                  }
+                  return const Center(child: Text("No todos"));
+                },
+              ),
+              BlocBuilder<CompletedTodosBloc, CompletedTodosState>(
+                builder: (context, state) {
+                  if (state is CompletedTodosLoaded) {
+                    return state.todos.isEmpty
+                        ? const Center(child: Text("No task"))
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListView.builder(
+                              itemCount: state.todos.length,
+                              itemBuilder: (ctx, index) => ToDoListItem(
+                                todo: state.todos[index],
+                              ),
                             ),
-                          ),
-                        );
-                }
-                return const Center();
-              },
-            ),
-          ],
+                          );
+                  }
+                  return const Center();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modul11_2/logic/blocs/todo/todo_bloc.dart';
 
 import '../../data/models/todo.dart';
-import '../../logic/todo/todo_cubit.dart';
 
 class ManageTodo extends StatefulWidget {
   final Todo? todo;
@@ -24,23 +24,23 @@ class _ManageTodoState extends State<ManageTodo> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (widget.todo == null) {
-        context.read<TodoCubit>().addTodo(_title);
+        context.read<TodoBloc>().add(AddNewTodoEvent(_title));
       } else {
-        context.read<TodoCubit>().editTodo(
+        context.read<TodoBloc>().add(EditTodoEvent(
               Todo(
                 id: widget.todo!.id,
                 title: _title,
                 isDone: widget.todo!.isDone,
                 userId: widget.todo!.userId,
               ),
-            );
+            ));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TodoCubit, TodoState>(
+    return BlocListener<TodoBloc, TodoState>(
       listener: (context, state) {
         if (state is TodoAdded || state is TodoAdded) {
           Navigator.of(context).pop();

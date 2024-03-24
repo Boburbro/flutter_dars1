@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'logic/active_todos/active_todos_cubit.dart';
-import 'logic/completed_todos/completed_todos_cubit.dart';
+import 'logic/blocs/active_todos/active_todos_bloc.dart';
+import 'logic/blocs/completed_todos/completed_todos_bloc.dart';
+import 'logic/blocs/todo/todo_bloc.dart';
+import 'logic/blocs/user/user_bloc.dart';
 
-import 'logic/todo/todo_cubit.dart';
-import 'logic/user/user_cubit.dart';
 import 'presentation/screens/todo_scrren.dart';
 
 void main() {
@@ -18,12 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (ctx) => UserCubit()),
         BlocProvider(
-            create: (ctx) => TodoCubit(userCubit: ctx.read<UserCubit>())),
-        BlocProvider(create: (ctx) => ActiveTodosCubit(ctx.read<TodoCubit>())),
-        BlocProvider(
-            create: (ctx) => CompletedTodosCubit(ctx.read<TodoCubit>())),
+          create: (ctx) => UserBloc(),
+        ),
+        BlocProvider(create: (ctx) => TodoBloc(ctx.read<UserBloc>())),
+        BlocProvider(create: (ctx) => ActiveTodosBloc(ctx.read<TodoBloc>())),
+        BlocProvider(create: (ctx) => CompletedTodosBloc(ctx.read<TodoBloc>())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

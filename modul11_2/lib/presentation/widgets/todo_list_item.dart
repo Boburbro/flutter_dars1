@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/blocs/todo/todo_bloc.dart';
 
 import '../../data/models/todo.dart';
-import '../../logic/todo/todo_cubit.dart';
 import 'manageTodo.dart';
 
 class ToDoListItem extends StatelessWidget {
@@ -17,7 +17,7 @@ class ToDoListItem extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: ListTile(
           leading: IconButton(
-            onPressed: () => context.read<TodoCubit>().toggleTodo(todo.id),
+            onPressed: () => context.read<TodoBloc>().add(ToggleTodoEvent(todo.id)),
             icon: Icon(
               todo.isDone
                   ? Icons.check_circle_outline_rounded
@@ -59,7 +59,7 @@ class ToDoListItem extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          context.read<TodoCubit>().removeTodo(todo.id);
+                          context.read<TodoBloc>().add(DeleteTodoEvent(todo.id));
                           Navigator.of(context).pop();
                         },
                         child: const Text(
