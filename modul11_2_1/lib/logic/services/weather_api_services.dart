@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:modul11_2_1/data/constants/constants.dart';
-import 'package:modul11_2_1/data/models/weather.dart';
-import 'package:modul11_2_1/logic/services/weather_exception.dart';
+import '../../data/constants/constants.dart';
+import '../../data/models/weather.dart';
+import 'weather_exception.dart';
 
 class WeatherAPIService {
   final http.Client client;
@@ -30,7 +30,7 @@ class WeatherAPIService {
       final mainData = data['main'];
 
       final Weather weather = Weather(
-        id: weatherData['id'],
+        id: weatherData['id'].toString(),
         main: weatherData['main'],
         desc: weatherData['description'],
         icon: weatherData['icon'],
