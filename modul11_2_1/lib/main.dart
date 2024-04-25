@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
+import 'package:modul11_2_1/logic/cubit/weather/weather_cubit.dart';
+import 'package:modul11_2_1/logic/repositories/weather_repostory.dart';
+import 'package:modul11_2_1/logic/services/weather_api_services.dart';
 
 import 'presentation/screens/home_screen.dart';
 
@@ -11,10 +16,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "AsSoft LLC",
-      home: HomeScreen(),
+    return RepositoryProvider(
+      create: (context) => WeatherRepository(
+        weatherAPIService: WeatherAPIService(
+          client: Client(),
+        ),
+      ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (ctx) =>
+                WeatherCubit(weatherRepository: ctx.read<WeatherRepository>()),
+          )
+        ],
+        child: const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "AsSoft LLC",
+          home: HomeScreen(),
+        ),
+      ),
     );
   }
 }
