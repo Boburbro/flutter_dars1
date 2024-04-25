@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
-import 'package:modul11_2_1/logic/cubit/weather/weather_cubit.dart';
-import 'package:modul11_2_1/logic/repositories/weather_repostory.dart';
-import 'package:modul11_2_1/logic/services/weather_api_services.dart';
+import 'logic/cubit/weather/weather_cubit.dart';
+import 'logic/repositories/weather_repostory.dart';
+import 'logic/services/weather_api_services.dart';
 
 import 'presentation/screens/home_screen.dart';
 
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
                 WeatherCubit(weatherRepository: ctx.read<WeatherRepository>()),
           )
         ],
-        child: const MaterialApp(
+        child: MaterialApp(
           debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: GoogleFonts.montserrat().fontFamily),
           title: "AsSoft LLC",
-          home: HomeScreen(),
+          home: const HomeScreen(),
         ),
       ),
     );

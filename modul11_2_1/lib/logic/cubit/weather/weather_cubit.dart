@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:modul11_2_1/data/models/weather.dart';
-import 'package:modul11_2_1/logic/repositories/weather_repostory.dart';
+
+import '../../../data/models/weather.dart';
+import '../../repositories/weather_repostory.dart';
 
 part 'weather_state.dart';
 
