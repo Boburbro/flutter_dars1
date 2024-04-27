@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:modul11_2_1/helper/extensions/string_extension.dart';
+import 'package:modul11_2_1/presentation/widgets/weather_menu.dart';
+import '../widgets/city_part.dart';
+import '../widgets/temperature.dart';
 import '../../logic/cubit/weather/weather_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,15 +15,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    context.read<WeatherCubit>().getWeather("ferghana");
     super.initState();
+    _getWeather("ferghana");
+  }
+
+  void _getWeather(String city) {
+    context.read<WeatherCubit>().getWeather(city);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<WeatherCubit, WeatherState>(
-        listener: (ctx, state) {
+        listener: (ctx, state) async {
           if (state is WeatherError) {
             showDialog(
               context: ctx,
@@ -36,6 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             );
+            if (state.message.toLowerCase().contains("not found")) {
+              _getWeather('ferghana');
+            }
           }
         },
         builder: (ctx, state) {
@@ -67,9 +76,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   imgPath,
                   fit: BoxFit.cover,
                   height: double.infinity,
+                  width: double.infinity,
                 ),
                 Container(
                   color: Colors.black.withOpacity(0.4),
+                ),
+                Positioned(
+                  right: 0,
+                  top: 30,
+                  child: WeatherMenu(getWeather: _getWeather),
                 ),
                 SafeArea(
                   child: Padding(
@@ -78,65 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              weather.city.capitalizeString(),
-                              style: const TextStyle(
-                                fontSize: 50,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              weather.desc.capitalizeString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${weather.temp.toStringAsFixed(0)}℃",
-                              style: const TextStyle(
-                                fontSize: 70,
-                                color: Colors.white,
-                                height: 0.5,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Image.network(
-                                  'https://openweathermap.org/img/wn/${weather.icon}.png',
-                                  width: 60,
-                                  height: 60,
-                                ),
-                                Text(
-                                  weather.main,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        )
+                        CityPart(weather: weather),
+                        Temperature(weather: weather),
                       ],
                     ),
                   ),
                 ),
               ],
             );
-
-            // return Center(
-            //   child: Text(state.weather.main.capitalizeString()),
-            // );
           } else {
             return const Center();
           }
