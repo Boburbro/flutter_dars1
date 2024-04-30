@@ -1,9 +1,63 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:modul11_2_homework/presentation/screens/menu.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void open_add_sheet(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF1C1B33),
+      context: context,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.all(18),
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height - 50,
+          child: Column(
+            children: [
+              TextFormField(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hoverColor: Colors.amber,
+                  labelText: "Enter a name of city",
+                  labelStyle: TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text(
+                      "E X I T",
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "G E T  W E A T H E R",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: 100,
+                          itemCount: 10,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (ctx, index) => Padding(
                             padding: const EdgeInsets.symmetric(
@@ -107,6 +161,7 @@ class HomeScreen extends StatelessWidget {
                             child: Container(
                               width: 70,
                               decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white54),
                                 borderRadius: BorderRadius.circular(30),
                                 color: const Color.fromARGB(255, 37, 34, 85),
                                 boxShadow: const [
@@ -163,7 +218,9 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  open_add_sheet(context);
+                                },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                     Colors.white,
@@ -176,7 +233,11 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () => Navigator.of(context).push(
+                                  CupertinoPageRoute(
+                                    builder: (_) => const MenuScreen(),
+                                  ),
+                                ),
                                 icon: const Icon(
                                   Icons.menu,
                                   size: 40,
