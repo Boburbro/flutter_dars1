@@ -15,9 +15,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final String city = "Fergana";
+
   @override
   void initState() {
-    context.read<WeatherBloc>().add(WeatherLoadingEvent(city: "Ferghana"));
+    context.read<WeatherBloc>().add(WeatherLoadingEvent(city: city));
     super.initState();
   }
 
@@ -25,9 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<WeatherBloc, WeatherState>(
-        listener: (context, state) {
-          if (state is WeatherLoaded) {}
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is WeatherLoaded) {
             return Stack(
@@ -36,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 NowWeather(
                   weather: state.weather,
                 ),
-                const WeeklyWeather(),
+                WeeklyWeather(
+                  weatherList: state.weatherList,
+                ),
               ],
             );
           } else if (state is WeatherLoading) {

@@ -2,12 +2,18 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:modul11_2_homework/data/models/weather.dart';
 
 import '../screens/menu.dart';
 import 'open_modal_bottom_sheet.dart';
 
 class WeeklyWeather extends StatelessWidget {
-  const WeeklyWeather({super.key});
+  const WeeklyWeather({
+    required this.weatherList,
+    super.key,
+  });
+  final List<Weather> weatherList;
 
   // ignore: non_constant_identifier_names
   void open_add_sheet(BuildContext context) {
@@ -16,7 +22,7 @@ class WeeklyWeather extends StatelessWidget {
       backgroundColor: const Color(0xFF1C1B33),
       context: context,
       builder: (ctx) {
-        return const OpenModalBottomSheet();
+        return OpenModalBottomSheet();
       },
     );
   }
@@ -34,6 +40,7 @@ class WeeklyWeather extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             height: 325,
+            // width: double.infinity,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -58,53 +65,75 @@ class WeeklyWeather extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: 10,
+                    itemCount: weatherList.length,
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: (ctx, index) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      child: Container(
-                        width: 70,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white54),
-                          borderRadius: BorderRadius.circular(30),
-                          color: const Color.fromARGB(255, 37, 34, 85),
-                          boxShadow: const [
-                            BoxShadow(
-                              offset: Offset(5, 5),
-                              blurRadius: 10,
-                              color: Colors.black54,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            const Text(
-                              'M',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                    itemBuilder: (ctx, index) {
+                      String imgPath = "assets/icons/tornado.png";
+
+                      if (weatherList[index]
+                          .main
+                          .toLowerCase()
+                          .contains("partly cloudy")) {
+                        imgPath = "assets/icons/sun_cloud_angled_rain.png";
+                      } else if (weatherList[index]
+                          .main
+                          .toLowerCase()
+                          .contains('patchy rain nearby')) {
+                        imgPath = "assets/icons/sun_cloud_rain.png";
+                      } else if (weatherList[index]
+                          .main
+                          .toLowerCase()
+                          .contains('sunny')) {
+                        imgPath = "assets/icons/sunny.png";
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        child: Container(
+                          width: 70,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white54),
+                            borderRadius: BorderRadius.circular(30),
+                            color: const Color.fromARGB(255, 37, 34, 85),
+                            boxShadow: const [
+                              BoxShadow(
+                                offset: Offset(5, 5),
+                                blurRadius: 10,
+                                color: Colors.black54,
                               ),
-                            ),
-                            Image.asset(
-                              "assets/icons/moon_cloud.png",
-                              fit: BoxFit.cover,
-                              width: 60,
-                              height: 60,
-                            ),
-                            const Text(
-                              "19°",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                DateFormat('EEE').format(
+                                    DateTime.parse(weatherList[index].id)),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                          ],
+                              Image.asset(
+                                imgPath,
+                                fit: BoxFit.cover,
+                                width: 60,
+                                height: 60,
+                              ),
+                              Text(
+                                "${weatherList[index].temp.toStringAsFixed(0)}°",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
                 SizedBox(
@@ -139,7 +168,9 @@ class WeeklyWeather extends StatelessWidget {
                         IconButton(
                           onPressed: () => Navigator.of(context).push(
                             CupertinoPageRoute(
-                              builder: (_) => const MenuScreen(),
+                              builder: (_) => MenuScreen(
+                                weatherList: weatherList,
+                              ),
                             ),
                           ),
                           icon: const Icon(

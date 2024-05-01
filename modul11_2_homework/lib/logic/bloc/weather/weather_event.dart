@@ -7,3 +7,4 @@ class WeatherLoadingEvent extends WeatherEvent {
   final String city;
   WeatherLoadingEvent({required this.city});
 }
+

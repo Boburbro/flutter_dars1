@@ -35,13 +35,6 @@ class NowWeather extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 18, color: Colors.white, height: 0.8),
                     ),
-                    const Text(
-                      "H:24° L:18°",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.white),
-                    ),
                   ],
                 )
               ],
