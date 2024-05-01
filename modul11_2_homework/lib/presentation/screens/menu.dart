@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:modul11_2_homework/data/models/weather.dart';
+
+import '../../data/models/weather.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({required this.weatherList, super.key});
   final List<Weather> weatherList;
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1C1B33),
@@ -22,7 +23,7 @@ class MenuScreen extends StatelessWidget {
         itemCount: weatherList.length,
         itemBuilder: (ctx, index) {
           String imgPath = "assets/icons/tornado.png";
-
+          print(weatherList[index].main);
           if (weatherList[index].main.toLowerCase().contains("partly cloudy")) {
             imgPath = "assets/icons/sun_cloud_angled_rain.png";
           } else if (weatherList[index]
@@ -30,6 +31,11 @@ class MenuScreen extends StatelessWidget {
               .toLowerCase()
               .contains('patchy rain nearby')) {
             imgPath = "assets/icons/sun_cloud_rain.png";
+          } else if (weatherList[index]
+              .main
+              .toLowerCase()
+              .contains('moderate rain')) {
+            imgPath = "assets/icons/sun_cloud_angled_rain.png";
           } else if (weatherList[index].main.toLowerCase().contains('sunny')) {
             imgPath = "assets/icons/sunny.png";
           }

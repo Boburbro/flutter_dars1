@@ -100,4 +100,28 @@ class WeatherAPIService {
 
     return weatherList;
   }
+
+  Future<String> getCity(double lat, double lon) async {
+    final url = Uri.parse("$base_url?lat=$lat&lon=$lon&appid=$api_key");
+
+    try {
+      final response = await client.get(url);
+
+      if (response.statusCode >= 400) {
+        throw WeatherException(response.reasonPhrase.toString());
+      }
+      final responseBody = jsonDecode(response.body);
+
+      if (responseBody == null) {
+        throw WeatherException('CANNOT GET WEATHER FOR lon lat');
+      }
+
+      final data = responseBody as Map<String, dynamic>;
+      print(data['name']);
+
+      return data['name'];
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

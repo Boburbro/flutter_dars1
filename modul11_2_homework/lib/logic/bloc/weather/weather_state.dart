@@ -15,3 +15,17 @@ final class WeatherLoaded extends WeatherState {
 }
 
 final class WeatherError extends WeatherState {}
+
+final class CityLoaded extends WeatherState {
+  final String city;
+
+  CityLoaded({required this.city});
+}
+
+final class CityLoading extends WeatherState {}
+
+final class CityError extends WeatherState {
+  final String message;
+
+  CityError({required this.message});
+}

@@ -2,11 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:modul11_2_homework/data/models/weather.dart';
+import '../../logic/bloc/weather/weather_bloc.dart';
+import '../../data/models/weather.dart';
 
 import '../screens/menu.dart';
-import 'open_modal_bottom_sheet.dart';
+import 'change_city_screen.dart';
 
 class WeeklyWeather extends StatelessWidget {
   const WeeklyWeather({
@@ -16,16 +19,16 @@ class WeeklyWeather extends StatelessWidget {
   final List<Weather> weatherList;
 
   // ignore: non_constant_identifier_names
-  void open_add_sheet(BuildContext context) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: const Color(0xFF1C1B33),
-      context: context,
-      builder: (ctx) {
-        return OpenModalBottomSheet();
-      },
-    );
-  }
+  // void open_add_sheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     isScrollControlled: true,
+  //     backgroundColor: const Color(0xFF1C1B33),
+  //     context: context,
+  //     builder: (ctx) {
+  //       return OpenModalBottomSheet();
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,6 @@ class WeeklyWeather extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             height: 325,
-            // width: double.infinity,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -143,7 +145,23 @@ class WeeklyWeather extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final permission =
+                                await Geolocator.checkPermission();
+                            if (permission == LocationPermission.denied) {
+                              await Geolocator.requestPermission();
+                            }
+                            Position position =
+                                await Geolocator.getCurrentPosition(
+                              desiredAccuracy: LocationAccuracy.high,
+                            );
+                            context.read<WeatherBloc>().add(
+                                  CityLoadingEvent(
+                                    lat: position.latitude,
+                                    lon: position.longitude,
+                                  ),
+                                );
+                          },
                           icon: const Icon(
                             Icons.location_on_outlined,
                             size: 40,
@@ -152,7 +170,33 @@ class WeeklyWeather extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () {
-                            open_add_sheet(context);
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (ctx, anima, other) {
+                                    return ChangeCityScreen();
+                                  },
+                                  transitionDuration:
+                                      const Duration(milliseconds: 1000),
+                                  reverseTransitionDuration:
+                                      const Duration(milliseconds: 200),
+                                  transitionsBuilder:
+                                      (ctx, anima, other, child) {
+                                    anima = CurvedAnimation(
+                                      parent: anima,
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      reverseCurve: Curves.fastOutSlowIn,
+                                    );
+                                    return Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: SizeTransition(
+                                        sizeFactor: anima,
+                                        axisAlignment: 0,
+                                        child: ChangeCityScreen(),
+                                      ),
+                                    );
+                                  }),
+                            );
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(

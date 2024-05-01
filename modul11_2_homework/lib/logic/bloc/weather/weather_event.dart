@@ -8,3 +8,9 @@ class WeatherLoadingEvent extends WeatherEvent {
   WeatherLoadingEvent({required this.city});
 }
 
+class CityLoadingEvent extends WeatherEvent {
+  final double lat;
+  final double lon;
+  CityLoadingEvent({required this.lat, required this.lon});
+}
+

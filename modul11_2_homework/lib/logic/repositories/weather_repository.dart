@@ -10,4 +10,7 @@ class WeatherRepository {
 
   Future<List<Weather>> getWeeklyWeather(String city) async =>
       await weatherAPIService.getWeeklyWeather(city);
+
+  Future<String> getCity(double lat, double lon) async =>
+      await weatherAPIService.getCity(lat, lon);
 }

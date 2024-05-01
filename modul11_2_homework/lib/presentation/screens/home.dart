@@ -15,10 +15,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String city = "Fergana";
+  final String city = "London";
+
+
 
   @override
   void initState() {
+
     context.read<WeatherBloc>().add(WeatherLoadingEvent(city: city));
     super.initState();
   }
