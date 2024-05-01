@@ -19,7 +19,7 @@ class MenuScreen extends StatelessWidget {
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: 20,
-        itemBuilder: (ctx, index) => Container(
+        itemBuilder: (ctx, index) => SizedBox(
           height: 200,
           child: Stack(
             children: [
