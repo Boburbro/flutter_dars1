@@ -14,7 +14,11 @@ final class WeatherLoaded extends WeatherState {
   WeatherLoaded({required this.weather, required this.weatherList});
 }
 
-final class WeatherError extends WeatherState {}
+final class WeatherError extends WeatherState {
+  final String message;
+
+  WeatherError({required this.message});
+}
 
 final class CityLoaded extends WeatherState {
   final String city;

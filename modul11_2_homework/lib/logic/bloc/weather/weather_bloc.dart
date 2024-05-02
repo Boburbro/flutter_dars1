@@ -12,24 +12,31 @@ part 'weather_state.dart';
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final WeatherRepository weatherRepository;
   WeatherBloc({required this.weatherRepository}) : super(WeatherInitial()) {
-
-
     on<WeatherLoadingEvent>((WeatherLoadingEvent event, Emitter emit) async {
-      emit(WeatherLoading());
-      final weather = await weatherRepository.getWeather(event.city);
-      final weatherList = await weatherRepository.getWeeklyWeather(event.city);
-      emit(WeatherLoaded(weather: weather, weatherList: weatherList));
+      try {
+        emit(WeatherLoading());
+        final weather = await weatherRepository.getWeather(event.city);
+        final weatherList =
+            await weatherRepository.getWeeklyWeather(event.city);
+        emit(WeatherLoaded(weather: weather, weatherList: weatherList));
+      } catch (e) {
+        emit(WeatherError(message: e.toString()));
+      }
     });
 
     on<CityLoadingEvent>((CityLoadingEvent event, Emitter emit) async {
-      emit(WeatherLoading());
-      emit(CityLoading());
-      final city = await weatherRepository.getCity(event.lat, event.lon);
-      emit(CityLoaded(city: city));
+      try {
+        emit(WeatherLoading());
+        emit(CityLoading());
+        final city = await weatherRepository.getCity(event.lat, event.lon);
+        emit(CityLoaded(city: city));
 
-      final weather = await weatherRepository.getWeather(city);
-      final weatherList = await weatherRepository.getWeeklyWeather(city);
-      emit(WeatherLoaded(weather: weather, weatherList: weatherList));
+        final weather = await weatherRepository.getWeather(city);
+        final weatherList = await weatherRepository.getWeeklyWeather(city);
+        emit(WeatherLoaded(weather: weather, weatherList: weatherList));
+      } catch (e) {
+        emit(CityError(message: e.toString()));
+      }
     });
   }
 }
