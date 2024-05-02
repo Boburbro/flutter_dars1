@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String city = "London";
+  final String city = "Toshkent Shahri";
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             );
-          }else if (state is CityLoaded) {
+          } else if (state is CityLoaded) {
             return Center(
               child: Container(
                 color: const Color(0xFF1C1B33),
@@ -73,10 +73,39 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           } else if (state is CityError) {
-            return Center(
-              child: LottieBuilder.asset('assets/animations/error.json'),
-            );
-          } else if (state is WeatherError) {
+            if (state.message.contains("Not Found")) {
+              return Scaffold(
+                backgroundColor: Colors.blueGrey[800],
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "The city not found",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.red[900],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: LottieBuilder.asset(
+                            'assets/animations/error1.json'),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () => context.read<WeatherBloc>().add(
+                              WeatherLoadingEvent(city: "Tashkent"),
+                            ),
+                        icon: const Icon(Icons.restart_alt_rounded),
+                        label: const Text("Try again"),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
             return Container(
               color: const Color(0xFF1C1B33),
               child: Center(
@@ -84,10 +113,65 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     LottieBuilder.asset('assets/animations/error.json'),
-                    IconButton(
-                      onPressed: () {},
+                    ElevatedButton.icon(
+                      onPressed: () => context.read<WeatherBloc>().add(
+                            WeatherLoadingEvent(city: "Tashkent"),
+                          ),
                       icon: const Icon(Icons.restart_alt_rounded),
-                    )
+                      label: const Text("Try again"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (state is WeatherError) {
+            if (state.message.contains("Not Found")) {
+              return Scaffold(
+                backgroundColor: Colors.blueGrey[800],
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "The city not found",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.red[900],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: LottieBuilder.asset(
+                            'assets/animations/error1.json'),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () => context.read<WeatherBloc>().add(
+                              WeatherLoadingEvent(city: "Tashkent"),
+                            ),
+                        icon: const Icon(Icons.restart_alt_rounded),
+                        label: const Text("Try again"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Container(
+              color: const Color(0xFF1C1B33),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LottieBuilder.asset('assets/animations/error.json'),
+                    ElevatedButton.icon(
+                      onPressed: () => context.read<WeatherBloc>().add(
+                            WeatherLoadingEvent(city: "Tashkent"),
+                          ),
+                      icon: const Icon(Icons.restart_alt_rounded),
+                      label: const Text("Try again"),
+                    ),
                   ],
                 ),
               ),

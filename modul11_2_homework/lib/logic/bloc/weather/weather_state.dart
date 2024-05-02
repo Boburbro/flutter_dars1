@@ -33,3 +33,5 @@ final class CityError extends WeatherState {
 
   CityError({required this.message});
 }
+
+final class NoInternet extends WeatherState{}

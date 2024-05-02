@@ -20,6 +20,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             await weatherRepository.getWeeklyWeather(event.city);
         emit(WeatherLoaded(weather: weather, weatherList: weatherList));
       } catch (e) {
+
         emit(WeatherError(message: e.toString()));
       }
     });

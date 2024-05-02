@@ -23,7 +23,6 @@ class MenuScreen extends StatelessWidget {
         itemCount: weatherList.length,
         itemBuilder: (ctx, index) {
           String imgPath = "assets/icons/tornado.png";
-          print(weatherList[index].main);
           if (weatherList[index].main.toLowerCase().contains("partly cloudy")) {
             imgPath = "assets/icons/sun_cloud_angled_rain.png";
           } else if (weatherList[index]
@@ -48,6 +47,7 @@ class MenuScreen extends StatelessWidget {
                   child: Image.asset(
                     'assets/widgets/rectangle.png',
                     height: 180,
+                    // width: 350,
                     fit: BoxFit.cover,
                   ),
                 ),
