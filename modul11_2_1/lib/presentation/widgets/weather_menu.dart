@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:modul11_2_1/presentation/screens/search_city_screen.dart';
-import 'package:modul11_2_1/presentation/screens/settings_screen.dart';
+import '../screens/search_city_screen.dart';
+import '../screens/settings_screen.dart';
 
 class WeatherMenu extends StatelessWidget {
   WeatherMenu({required this.getWeather, super.key});

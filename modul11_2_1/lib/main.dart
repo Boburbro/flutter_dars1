@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
-import 'package:modul11_2_1/logic/cubit/settings/settings_cubit.dart';
-import 'package:modul11_2_1/presentation/screens/search_city_screen.dart';
-import 'package:modul11_2_1/presentation/screens/settings_screen.dart';
+import 'logic/cubit/settings/settings_cubit.dart';
+import 'presentation/screens/search_city_screen.dart';
+import 'presentation/screens/settings_screen.dart';
 
 import 'logic/cubit/weather/weather_cubit.dart';
 import 'logic/repositories/weather_repostory.dart';

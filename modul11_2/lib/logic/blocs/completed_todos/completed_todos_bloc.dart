@@ -1,6 +1,6 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
 import '../../../data/models/todo.dart';
 import '../todo/todo_bloc.dart';
 
@@ -12,8 +12,6 @@ class CompletedTodosBloc
   final TodoBloc todoBloc;
 
   CompletedTodosBloc(this.todoBloc) : super(CompletedTodosInitial()) {
-   
-
     on<CompletedTodosEvent>(_getCompletedTodos);
   }
   void _getCompletedTodos(
@@ -22,6 +20,4 @@ class CompletedTodosBloc
         todoBloc.state.todos.where((element) => element.isDone).toList();
     emit(CompletedTodosLoaded(todos));
   }
-
-
 }

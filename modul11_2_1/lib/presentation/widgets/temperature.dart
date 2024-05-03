@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:modul11_2_1/logic/cubit/settings/settings_cubit.dart';
+import '../../logic/cubit/settings/settings_cubit.dart';
 import '../../data/models/weather.dart';
 
 // ignore: must_be_immutable

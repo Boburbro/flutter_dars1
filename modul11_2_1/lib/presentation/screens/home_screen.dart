@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:modul11_2_1/presentation/widgets/weather_menu.dart';
+import '../widgets/weather_menu.dart';
 import '../widgets/city_part.dart';
 import '../widgets/temperature.dart';
 import '../../logic/cubit/weather/weather_cubit.dart';
