@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
-import 'package:modul12_homework/presentation/screens/video_pleyer.dart';
+import 'package:modul12_homework/presentation/screens/desc.dart';
 
 import 'logic/bloc/api_service_bloc.dart';
 import 'logic/repositories/api_repository.dart';
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           routes: {
             HomeScreen.routeName: (ctx) => const HomeScreen(),
             CourseDitailsScreen.routeName: (ctx) => const CourseDitailsScreen(),
-            VideoPlayer.routeName: (ctx) => const VideoPlayer(),
+            DescScreen.routeName: (ctx) => const DescScreen(),
           },
         ),
       ),

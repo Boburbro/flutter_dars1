@@ -15,10 +15,11 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
     on<ApiServiceEvent>((event, emit) {});
     on<GetCoursesEvent>((event, emit) async {
       try {
+        emit(CoursesLoading());
         final coursesList = await apiRepository.getCourses();
         emit(CoursesLoaded(courses: coursesList));
       } catch (e) {
-        rethrow;
+        emit(CoursesError(message: e.toString()));
       }
     });
   }

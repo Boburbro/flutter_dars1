@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:modul12_homework/logic/repositories/api_exceptions.dart';
 
 import '../../data/constants/urls.dart';
 import '../../data/models/course_model.dart';
@@ -17,7 +18,14 @@ class APIService {
 
     try {
       final response = await client.get(url);
+
+      if (response.statusCode >= 400) {
+        throw APIException(response.reasonPhrase.toString());
+      }
+
       final responseBody = jsonDecode(response.body) as Map;
+
+      // ignore: no_leading_underscores_for_local_identifiers
       for (var _key in responseBody.keys) {
         coursesList.add(
           CourseModel(
