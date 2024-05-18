@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:modul13_1/second_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,21 +30,51 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   double _cubeSize = 150;
+  // double _fontSize = 0;
   bool _isIncrease = true;
-  Color _color = Colors.deepPurple;
+  Color _color = Colors.red;
 
+  // late Animation<double> _opacity;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    // _opacity = Tween<double>(
+    //   begin: 0.0,
+    //   end: 1.0,
+    // ).animate(
+    //   CurvedAnimation(
+    //     parent: _animationController,
+    //     curve: Curves.easeIn,
+    //   ),
+    // );
+
+    super.initState();
+  }
+
+  // ignore: unused_element
   void _toggleSize() {
     setState(() {
       if (_isIncrease) {
         _cubeSize = 300;
         _isIncrease = false;
-        _color = Colors.red;
+        _color = Colors.blue;
+        // _fontSize = 30;
+        _animationController.forward();
       } else {
         _cubeSize = 150;
         _isIncrease = true;
-        _color = Colors.deepPurple;
+        _color = Colors.red;
+        // _fontSize = 0;
+        _animationController.reverse();
       }
     });
   }
@@ -65,14 +96,40 @@ class _MyHomePageState extends State<MyHomePage> {
             width: _cubeSize,
             height: _cubeSize,
             color: _color,
-            child: const Center(
-              child: Text("Salom text"),
+            child: Center(
+              child: Hero(
+                tag:
+                    "https://images.unsplash.com/photo-1715966966827-25a227141ee9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                child: FadeInImage(
+                  fit: BoxFit.cover,
+                  width: _cubeSize,
+                  height: _cubeSize,
+                  placeholder: const AssetImage("assets/car.jpg"),
+                  image: const NetworkImage(
+                      "https://images.unsplash.com/photo-1715966966827-25a227141ee9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+
+                  // AnimatedDefaultTextStyle(
+                  //   style: TextStyle(
+                  //     fontSize: _fontSize,
+                  //     color: Colors.white,
+                  //   ),
+                  //   duration: const Duration(milliseconds: 300),
+                  //   child: const Text(
+                  //     "Salom text",
+                  //   ),
+                  // ),
+                ),
+              ),
             ),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _toggleSize,
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const SecondPage(),
+          ),
+        ), // _toggleSize,
         tooltip: 'Increment',
         child: const Icon(Icons.play_arrow_rounded),
       ),
