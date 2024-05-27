@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'place_detailes.dart';
 import '../providers/place_provider.dart';
 import 'add_place_screen.dart';
 import 'package:provider/provider.dart';
@@ -39,12 +40,19 @@ class PlacesListScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
+                        onTap: () => Navigator.of(context).pushNamed(
+                          PlaceDetailes.routeName,
+                          arguments: placeProvider.places[index].id,
+                        ),
                         leading: CircleAvatar(
                           backgroundImage: FileImage(
                             placeProvider.places[index].image,
                           ),
                         ),
                         title: Text(placeProvider.places[index].title),
+                        subtitle: Text(
+                          placeProvider.places[index].location.address,
+                        ),
                       ),
                     );
                   },

@@ -11,16 +11,15 @@ class PlaceProvider with ChangeNotifier {
 
   List<PlaceModel> get places => [..._places];
 
-  void addPlace(String title, File image) async {
+  PlaceModel getPlaceById(String id) =>
+      _places.firstWhere((place) => place.id == id);
+
+  void addPlace(String title, File image, PlaceLocation place) async {
     // ignore: no_leading_underscores_for_local_identifiers
     final _place = PlaceModel(
       id: UniqueKey().toString(),
       title: title,
-      location: PlaceLocation(
-        latitude: '1',
-        longitude: '1',
-        address: 'address',
-      ),
+      location: place,
       image: image,
     );
 
@@ -29,8 +28,10 @@ class PlaceProvider with ChangeNotifier {
     await PlaceDB.insert({
       'id': _place.id,
       'title': _place.title,
-      'location': 'a',
       'image': _places.last.image.path,
+      'lat': _place.location.latitude,
+      'long': _place.location.longitude,
+      'address': _place.location.address,
     });
 
     notifyListeners();
@@ -45,9 +46,9 @@ class PlaceProvider with ChangeNotifier {
             id: place['id'],
             title: place['title'],
             location: PlaceLocation(
-              latitude: '1',
-              longitude: '1',
-              address: 'address',
+              latitude: place['lat'],
+              longitude: place['long'],
+              address: place['address'],
             ),
             image: File(place['image']),
           ),

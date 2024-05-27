@@ -7,7 +7,7 @@ class PlaceDB {
     return await sql.openDatabase(
       path.join(dbPath, "baza.db"),
       onCreate: (db, version) => db.execute(
-        "CREATE TABLE main (id TEXT PRIMARY KEY, title TEXT, image TEXT, location TEXT)",
+        "CREATE TABLE main (id TEXT PRIMARY KEY, title TEXT, image TEXT, lat REAL, long REAL, address TEXT)",
       ),
       version: 1,
     );

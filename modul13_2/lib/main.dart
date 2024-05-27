@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'screens/place_detailes.dart';
+import 'package:provider/provider.dart';
+
 import 'providers/place_provider.dart';
+
 import 'screens/add_place_screen.dart';
 import 'screens/places_list_screen.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,6 +49,7 @@ class MyApp extends StatelessWidget {
         home: const PlacesListScreen(),
         routes: {
           AddPlaceScreen.routeName: (ctx) => AddPlaceScreen(),
+          PlaceDetailes.routeName: (ctx) => const PlaceDetailes(),
         },
       ),
     );

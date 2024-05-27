@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:modul13_2/widgets/location_input.dart';
+import '../models/place_models.dart';
+import 'package:provider/provider.dart';
+
 import '../providers/place_provider.dart';
 import '../widgets/image_input.dart';
-import 'package:provider/provider.dart';
+import '../widgets/location_input.dart';
 
 // ignore: must_be_immutable
 class AddPlaceScreen extends StatelessWidget {
@@ -14,12 +16,26 @@ class AddPlaceScreen extends StatelessWidget {
 
   // ignore: unused_field
   File? _image;
+  PlaceLocation? _placeLocation;
   String _title = "";
 
   AddPlaceScreen({super.key});
 
   void takeImage(File image) {
     _image = image;
+  }
+
+  void pickPlace({
+    required double latitude,
+    required double longitude,
+    required String address,
+  }) {
+
+    _placeLocation = PlaceLocation(
+      latitude: latitude,
+      longitude: longitude,
+      address: address,
+    );
   }
 
   void submit(BuildContext context) {
@@ -37,10 +53,25 @@ class AddPlaceScreen extends StatelessWidget {
             ],
           ),
         );
+        return;
+      } else if (_placeLocation == null) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Manzilni kiriting!"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              )
+            ],
+          ),
+        );
+        return;
       }
       _formKey.currentState!.save();
       Provider.of<PlaceProvider>(context, listen: false)
-          .addPlace(_title, _image!);
+          .addPlace(_title, _image!, _placeLocation!);
 
       Navigator.of(context).pop();
     }
@@ -85,7 +116,9 @@ class AddPlaceScreen extends StatelessWidget {
                         takeImage: takeImage,
                       ),
                       const SizedBox(height: 10),
-                      const LocationInput(),
+                      LocationInput(
+                        pickLocation: pickPlace,
+                      ),
                     ],
                   ),
                 ),

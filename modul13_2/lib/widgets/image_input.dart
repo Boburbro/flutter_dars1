@@ -7,7 +7,10 @@ import 'package:path_provider/path_provider.dart' as sys_path;
 
 class ImageInput extends StatefulWidget {
   final Function takeImage;
-  const ImageInput({required this.takeImage, super.key});
+  const ImageInput({
+    required this.takeImage,
+    super.key,
+  });
 
   @override
   State<ImageInput> createState() => _ImageInputState();
@@ -16,11 +19,11 @@ class ImageInput extends StatefulWidget {
 class _ImageInputState extends State<ImageInput> {
   File? _imageFile;
 
-  void _takePicture() async {
+  void _takePicture(ImageSource _imageSource) async {
     final imagePicker = ImagePicker();
 
     final photo = await imagePicker.pickImage(
-      source: ImageSource.camera,
+      source: _imageSource,
       maxWidth: 600,
     );
     if (photo != null) {
@@ -57,15 +60,30 @@ class _ImageInputState extends State<ImageInput> {
                 )
               : const Text("Rasmi yo'q"),
         ),
-        TextButton.icon(
-          onPressed: _takePicture,
-          icon: const Icon(Icons.camera_alt_rounded),
-          label: const Text(
-            "Rasim yuklash",
-            style: TextStyle(
-              color: Colors.indigo,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton.icon(
+              onPressed: () => _takePicture(ImageSource.camera),
+              icon: const Icon(Icons.camera_alt_rounded),
+              label: const Text(
+                "Kamera",
+                style: TextStyle(
+                  color: Colors.indigo,
+                ),
+              ),
             ),
-          ),
+            TextButton.icon(
+              onPressed: () => _takePicture(ImageSource.gallery),
+              icon: const Icon(Icons.image_rounded),
+              label: const Text(
+                "Gallery",
+                style: TextStyle(
+                  color: Colors.indigo,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

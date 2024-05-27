@@ -1,8 +1,8 @@
 import 'dart:io';
 
 class PlaceLocation {
-  final String latitude;
-  final String longitude;
+  final double latitude;
+  final double longitude;
   final String address;
 
   PlaceLocation({
