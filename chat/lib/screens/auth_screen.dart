@@ -1,3 +1,10 @@
+import 'dart:io';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:chat/helpers/custom_material_banner.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import '../widgets/auth/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,11 +18,19 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final fcm = FirebaseMessaging.instance;
+    fcm.requestPermission();
+  }
+
   final _auth = FirebaseAuth.instance;
 
   bool isLoading = false;
 
-  void _getUserDetails(Map<String, String> userData, bool isLogin) async {
+  void _getUserDetails(
+      Map<String, String> userData, bool isLogin, File? userImage) async {
     setState(() {
       isLoading = true;
     });
@@ -35,10 +50,20 @@ class _AuthScreenState extends State<AuthScreen> {
           password: password,
         );
 
+        final imagePath = FirebaseStorage.instance
+            .ref()
+            .child('images')
+            .child('${user.user!.uid}.jpg');
+
+        await imagePath.putFile(userImage!);
+
+        final url = await imagePath.getDownloadURL();
+
         FirebaseFirestore.instance.collection("users").doc(user.user!.uid).set({
           "username": userData["username"]!.trim(),
           'email': email,
           "password": password,
+          "image": url,
         });
       }
       setState(() {
@@ -54,18 +79,19 @@ class _AuthScreenState extends State<AuthScreen> {
       }
 
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showMaterialBanner(
-        MaterialBanner(
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () =>
-                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
-              child: const Text("Ok"),
-            )
-          ],
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentMaterialBanner()
+        ..showMaterialBanner(
+          customMaterialBanner(
+            title: "Nimadur bo'ldi",
+            message: message,
+            contentType: ContentType.failure,
+          ),
+        );
+
+      Future.delayed(const Duration(seconds: 3)).then((_) {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      });
     } catch (e) {
       debugPrint(e.toString());
       setState(() {

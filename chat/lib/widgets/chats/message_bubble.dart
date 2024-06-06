@@ -1,22 +1,37 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
     required this.message,
     required this.username,
+    required this.imageUrl,
+    required this.userId,
     required this.isMe,
     super.key,
   });
 
   final String message;
   final String username;
+  final String userId;
+  final String imageUrl;
   final bool isMe;
 
   @override
   Widget build(BuildContext context) {
+    final image = imageUrl;
     return Row(
-      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
+        if (!isMe)
+          CachedNetworkImage(
+            imageUrl: image,
+            placeholder: (context, url) => const CupertinoActivityIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        const SizedBox(width: 5),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           width: 150,
@@ -42,6 +57,19 @@ class MessageBubble extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(width: 5),
+        if (isMe)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: CachedNetworkImage(
+              imageUrl: image,
+              placeholder: (context, url) => const CupertinoActivityIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover,
+            ),
+          ),
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:chat/helpers/get_time.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,16 @@ class _NewMessageState extends State<NewMessage> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
-      user = FirebaseAuth.instance.currentUser;
-      userData = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user!.uid)
-          .get();
-    });
+    Future.delayed(
+      Duration.zero,
+      () async {
+        user = FirebaseAuth.instance.currentUser;
+        userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+      },
+    );
     super.initState();
   }
 
@@ -48,17 +52,22 @@ class _NewMessageState extends State<NewMessage> {
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                 child: TextFormField(
                   controller: NewMessage._controller,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration:
                       const InputDecoration(labelText: "Xabar yuboring..."),
                   onSaved: (newValue) async {
                     if (newValue != null && newValue.trim().isNotEmpty) {
-                      FirebaseFirestore.instance.collection("/chats").add({
-                        'text': newValue,
-                        'createdAt': Timestamp.now(),
-                        "userId": user!.uid,
-                        'username': userData.data()!['username'],
-                      });
                       NewMessage._controller.clear();
+                      String time = await getTime();
+                      FirebaseFirestore.instance.collection("/chats").add(
+                        {
+                          'text': newValue,
+                          'createdAt': Timestamp.fromDate(DateTime.parse(time)),
+                          "userId": user!.uid,
+                          'username': userData['username'],
+                          "image": userData['image'],
+                        },
+                      );
                     }
                   },
                 ),

@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:chat/helpers/custom_material_banner.dart';
+import 'package:chat/widgets/pickers/user_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,11 +26,34 @@ class _AuthFormState extends State<AuthForm> {
     "username": "",
     "password": "",
   };
+
+  File? userImage;
+
+  void _pickImage(File image) {
+    userImage = image;
+  }
+
   void _submit() {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
+      if (userImage == null && !isLogin) {
+        Future.delayed(const Duration(seconds: 5)).then((_) {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showMaterialBanner(
+            customMaterialBanner(
+              title: "Nimadur bo'ldi",
+              message: "Iltimos rasim kiriting!",
+              contentType: ContentType.failure,
+            ),
+          );
+
+        return;
+      }
       _formKey.currentState!.save();
-      widget.getUserDetails(_userData, isLogin);
+      widget.getUserDetails(_userData, isLogin, userImage);
     }
   }
 
@@ -42,6 +70,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (!isLogin) UserImagePicker(_pickImage),
                   TextFormField(
                     key: const ValueKey("email"),
                     keyboardType: TextInputType.emailAddress,
